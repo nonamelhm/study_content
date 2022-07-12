@@ -3,17 +3,19 @@
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/flv">flv直播</router-link>|
+      <router-link to="/tree">tree</router-link>|
       <router-link to="/about">About</router-link>
+
     </div>
     <router-view/>
-  
+
   </div>
 </template>
 <script>
 
 export default{
   methods:{
-   
+
   }
 }
 </script>

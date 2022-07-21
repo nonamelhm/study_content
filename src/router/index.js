@@ -26,6 +26,12 @@ const routes = [{
         name: 'Tree',
         component: () =>
             import ( '../components/Tree.vue')
+    },
+    {
+        path: '/hotmap',
+        name: 'HotMap',
+        component: () =>
+            import ( '../components/HotMap.vue')
     }
 ]
 

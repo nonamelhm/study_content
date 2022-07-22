@@ -2,8 +2,9 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/flv">flv直播</router-link>|
-      <router-link to="/tree">tree</router-link>|
+    <router-link to="/flv">flv直播</router-link>|
+    <router-link to="/xgPlayer">flv西瓜直播</router-link>|
+     <router-link to="/dragFlv">项目要求拖拽flv</router-link>|
       <router-link to="/hotmap">热力图</router-link>|
       <router-link to="/about">About</router-link>
     </div>

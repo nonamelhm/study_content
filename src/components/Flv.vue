@@ -14,7 +14,7 @@ export default{
        let flvPlayer = flvjs.createPlayer({
             type: 'flv',
             isLive: true,
-            url: 'http://video.flv'
+            url: 'http://101.35.224.13:8866/live?url=rtsp://113.52.155.43:9090/dss/monitor/params?cameraid=1000000%240&substream=1?token=81'
         });
         flvPlayer.attachMediaElement(videoElement);
         flvPlayer.load();

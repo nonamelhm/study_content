@@ -21,12 +21,18 @@ const routes = [{
         component: () =>
             import ( '../components/Flv.vue')
     },
-    {
-        path: '/tree',
-        name: 'Tree',
-        component: () =>
-            import ( '../components/Tree.vue')
-    },
+   {
+       path: '/xgPlayer',
+       name: 'XgPlayer',
+       component: () =>
+           import ( '../components/XgPlayer.vue')
+   },
+   {
+       path: '/dragFlv',
+       name: 'DragFlv',
+       component: () =>
+           import ( '../components/DragFlv.vue')
+   },
     {
         path: '/hotmap',
         name: 'HotMap',

@@ -14,7 +14,9 @@
     "videojs-flash": "^2.2.1",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
-    "vue-video-player": "^5.0.2"
+    "vue-video-player": "^5.0.2",
+    "xgplayer": "^2.31.6",
+    "xgplayer-flv.js": "^2.3.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

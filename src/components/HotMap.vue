@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="map" class="hotmap"></div>
+    <div id="HotMap" class="hotmap"></div>
   </div>
 </template>
 
@@ -9,6 +9,7 @@
   import "@/assets/js/leaflet.js"
   import "@/assets/js/leaflet-heatmap.js"
   export default {
+    name:'HotMap',
     mounted() {
       this.init()
       console.log(L.heatLayer)
@@ -22,7 +23,7 @@
             'http://t4.tianditu.gov.cn/DataServer?T=cia_w&x={x}&y={y}&l={z}&tk=5bb740ffd3a80fb3963e022454eca6e2')
         ])
         // 初始化地图信息
-        var map = L.map('map', {
+        var map = L.map('HotMap', {
           // crs: L.CRS.EPSG4326,
           layers: [tiandituI],
           center: [0, 0],

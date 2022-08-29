@@ -1,0 +1,15 @@
+.noList{
+	list-style:none;
+}
+.gray{
+	background-color:rgba(0,0,9,.09);
+}
+.fixed{
+    position:fixed;
+}
+.relative{
+	position:relative;
+}
+.textL{
+    text-align:left;
+}

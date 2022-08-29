@@ -38,6 +38,12 @@ const routes = [{
         name: 'HotMap',
         component: () =>
             import ( '../components/HotMap.vue')
+    },
+    {
+        path: '/progress',
+        name: 'Progress',
+        component: () =>
+            import ( '../components/Progress.vue')
     }
 ]
 

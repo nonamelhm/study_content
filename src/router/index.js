@@ -5,50 +5,56 @@ import Home from '../views/Home.vue'
 Vue.use(VueRouter)
 
 const routes = [{
-        path: '/',
-        name: 'Home',
-        component: Home
-    },
-    {
-        path: '/about',
-        name: 'About',
-        component: () =>
-            import ('../views/About.vue')
-    },
-    {
-        path: '/flv',
-        name: 'Flv',
-        component: () =>
-            import ( '../components/Flv.vue')
-    },
-   {
-       path: '/xgPlayer',
-       name: 'XgPlayer',
-       component: () =>
-           import ( '../components/XgPlayer.vue')
-   },
-   {
-       path: '/dragFlv',
-       name: 'DragFlv',
-       component: () =>
-           import ( '../components/DragFlv.vue')
-   },
-    {
-        path: '/hotmap',
-        name: 'HotMap',
-        component: () =>
-            import ( '../components/HotMap.vue')
-    },
-    {
-        path: '/progress',
-        name: 'Progress',
-        component: () =>
-            import ( '../components/Progress.vue')
-    }
+    path: '/',
+    name: 'Home',
+    component: Home
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: () =>
+      import('../views/About.vue')
+  },
+  {
+    path: '/flv',
+    name: 'Flv',
+    component: () =>
+      import('../components/Flv.vue')
+  },
+  {
+    path: '/xgPlayer',
+    name: 'XgPlayer',
+    component: () =>
+      import('../components/XgPlayer.vue')
+  },
+  {
+    path: '/dragFlv',
+    name: 'DragFlv',
+    component: () =>
+      import('../components/DragFlv.vue')
+  },
+  {
+    path: '/hotmap',
+    name: 'HotMap',
+    component: () =>
+      import('../components/HotMap.vue')
+  },
+  {
+    path: '/progress',
+    name: 'Progress',
+    component: () =>
+      import('../components/Progress.vue')
+  },
+  {
+    path: '/map',
+    name: 'Map',
+    component: () =>
+      import('../components/Map.vue')
+  }
 ]
 
 const router = new VueRouter({
-    routes
+  routes
 })
 
 export default router

@@ -7,6 +7,7 @@
       <router-link to="/dragFlv">项目要求拖拽flv</router-link>|
       <router-link to="/hotmap">热力图</router-link>|
       <router-link to="/progress">进度条</router-link>|
+      <router-link to="/map">地图</router-link>|
       <router-link to="/about">About</router-link>
     </div>
     <router-view />

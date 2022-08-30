@@ -10,6 +10,15 @@
 .relative{
 	position:relative;
 }
+.absolute{
+    position:absolute;
+}
 .textL{
     text-align:left;
+}
+.white{
+	background-color:#fff;
+}
+.point{
+	cursor: pointer;
 }

@@ -10,7 +10,9 @@ export default {
       lng: 0,
       isClick: false,
       isMeasure: false,
-      polylineMeasure: null
+      polylineMeasure: null,
+      layer: null,
+      allLayers: [],
     }
   },
   methods: {
@@ -51,54 +53,65 @@ export default {
       if (!this.isClick) {
         this.isClick = true
         map.addEventListener('click', (e) => { //点击事件
-          L.marker([e.latlng.lat, e.latlng.lng], {
+          this.layer = L.marker([e.latlng.lat, e.latlng.lng], {
             icon: myIcon
           }).addTo(map);
+          this.allLayers.push(this.layer)//存下所有layers
           map.setView([e.latlng.lat, e.latlng.lng]) // 移动到中心
         })
       } else {
         map.removeEventListener("click")
+        this.allLayers.forEach(item => { //清除绘制的所有点的图层
+          item.remove();
+        })
         this.isClick = false
       }
     },
-    _measureDistance(map,id) { //测量距离
-    if(!this.isMeasure){
-      this.isMeasure = true
-      L.control.scale({
-        maxWidth: 240,
-        metric: true,
-        imperial: false,
-        position: 'bottomleft'
-      }).addTo(map);
-      this.polylineMeasure = L.control.polylineMeasure({
-        position: 'topleft',
-        unit: 'kilometres', //最小单位
-        // showBearings: true,
-        clearMeasurementsOnStop: false,
-        // showClearControl: true,
-        // showUnitControl: true,
-        bearingTextIn: '起点',
-        bearingTextOut: '终点',
-        tooltipTextFinish: '单击并<b>拖动到移动点</b><br>',
-        tooltipTextDelete: '<b>按shift键，然后单击删除</b>',
-        unitControlLabel: {
-          metres: '米',
-          kilometres: '千米',
-          feet: '英尺',
-          landmiles: '英里',
-          nauticalmiles: '海里'
-        },
-      })
-      this.polylineMeasure.addTo(map);
-       //开始测距
-       this.$nextTick(()=>{  //点击就绘制
-         document.getElementById(`polyline-measure-control`).click()
-       })
-      }else{   //取消测量
-        this.isMeasure = false
-       this.$nextTick(()=>{  //清楚测量绘制
-        document.getElementById(id).getElementsByClassName('polyline-measure-clearControl')[0].click()
-      })
+    _measureDistance(map, id) { //测量距离
+      if (!this.isMeasure) {
+        if (!this.polylineMeasure) {
+          L.control.scale({
+            maxWidth: 240,
+            metric: true,
+            imperial: false,
+            position: 'bottomleft'
+          }).addTo(map);
+          this.polylineMeasure = L.control.polylineMeasure({
+            position: 'topleft',
+            unit: 'kilometres', //最小单位
+            showBearings: true,
+            clearMeasurementsOnStop: false,
+            showClearControl: true,
+            showUnitControl: true,
+            bearingTextIn: '起点',
+            bearingTextOut: '终点',
+            tooltipTextFinish: '单击并<b>拖动到移动点</b><br>',
+            tooltipTextDelete: '<b>按shift键，然后单击删除</b>',
+            unitControlLabel: {
+              metres: '米',
+              kilometres: '千米',
+              feet: '英尺',
+              landmiles: '英里',
+              nauticalmiles: '海里'
+            },
+          })
+          this.polylineMeasure.addTo(map);
+        }
+        //开始测距
+        this.$nextTick(() => { //点击就绘制
+          // 隐藏侧边栏目那些工具UI
+          document.getElementsByClassName('leaflet-bar').forEach((item) => {
+            item.style.display = 'none'
+          })
+          document.getElementById(`polyline-measure-control`).click()
+          this.isMeasure = true
+        })
+      } else { //取消测量
+        this.$nextTick(() => { //清除测量绘制
+          // 隐藏清除
+          document.getElementById(id).getElementsByClassName('polyline-measure-clearControl')[0].click()
+          this.isMeasure = false
+        })
       }
       // 监听画线状态 仅是学习
       // map.on('polylinemeasure:start', currentLine => {
@@ -128,9 +141,6 @@ export default {
       // map.on('polylinemeasure:insert', e => { /* e.latlng */ });
       // map.on('polylinemeasure:move', e => { /* e.latlng ; e.sourceTarget._latlng */ });
       // map.on('polylinemeasure:remove', e => { /* e.latlng ; e.sourceTarget._latlng */ });
-
-
-
     }
   }
 }

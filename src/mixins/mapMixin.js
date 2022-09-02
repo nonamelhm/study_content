@@ -2,6 +2,10 @@ import 'leaflet/dist/leaflet.css'
 import '@/assets/css/Leaflet.PolylineMeasure.css'
 import L from 'leaflet'
 import '@/assets/js/Leaflet.PolylineMeasure.js'
+// 轨迹回放
+import '@/assets/js/LeafletPlayback.js'
+import demoTracks from '@/assets/js/demo-tracks.js' //数据，正常应该是从接口获取进行数据整理
+
 // 地图操作mapMixin
 export default {
   data() {
@@ -13,6 +17,7 @@ export default {
       polylineMeasure: null,
       layer: null,
       allLayers: [],
+      isPlayback: false
     }
   },
   methods: {
@@ -56,7 +61,7 @@ export default {
           this.layer = L.marker([e.latlng.lat, e.latlng.lng], {
             icon: myIcon
           }).addTo(map);
-          this.allLayers.push(this.layer)//存下所有layers
+          this.allLayers.push(this.layer) //存下所有layers
           map.setView([e.latlng.lat, e.latlng.lng]) // 移动到中心
         })
       } else {
@@ -141,6 +146,37 @@ export default {
       // map.on('polylinemeasure:insert', e => { /* e.latlng */ });
       // map.on('polylinemeasure:move', e => { /* e.latlng ; e.sourceTarget._latlng */ });
       // map.on('polylinemeasure:remove', e => { /* e.latlng ; e.sourceTarget._latlng */ });
+    },
+    _playback(map) {
+
+      var basemapLayer = new L.TileLayer('http://{s}.tiles.mapbox.com/v3/github.map-xgq2svrz/{z}/{x}/{y}.png');
+
+      // Center map and default zoom level
+      map.setView([44.61131534, -123.4726739], 9);
+
+      // Adds the background layer to the map
+      map.addLayer(basemapLayer);
+
+      // =====================================================
+      // =============== Playback ============================
+      // =====================================================
+      // Playback options
+      if (!this.isPlayback) {
+        var playbackOptions = {
+          playControl: true,
+          dateControl: true,
+          sliderControl: true
+        };
+        // Initialize playback
+        console.log(demoTracks)
+        console.log('----------------')
+
+        var playback = L.playback(map, demoTracks, null, playbackOptions);
+        this.isPlayback = true
+      } else {
+        this.isPlayback = false
+      }
+
     }
   }
 }

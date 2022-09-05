@@ -8,7 +8,7 @@
           <li>纬度：{{lng}}</li>
         </ul>
       </div>
-     <map-function class="absolute" id="normalMap" :map="map" :url="url" style="top:31px;right:10px;z-index:9999;"></map-function>
+     <map-function class="absolute" id="normalMap" :map="map" :url="url" style="top:31px;z-index:9999;"></map-function>
     </div>
   </div>
 </template>

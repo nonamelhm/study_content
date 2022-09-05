@@ -8,6 +8,7 @@
       <router-link to="/hotmap">热力图</router-link>|
       <router-link to="/progress">进度条</router-link>|
       <router-link to="/map">地图</router-link>|
+	  <router-link to="/flex">玩转flex布局</router-link>|
       <router-link to="/about">About</router-link>
     </div>
     <router-view />
@@ -24,10 +25,14 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
+    display: flex;
+    height: 900px;
+    flex-direction: column;
   }
 
   #nav {
     padding: 30px;
+    height:24px;
   }
 
   #nav a {

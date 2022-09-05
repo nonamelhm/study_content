@@ -1,11 +1,16 @@
 import 'leaflet/dist/leaflet.css'
 import '@/assets/css/Leaflet.PolylineMeasure.css'
+import '@/assets/css/control.playback.css'
 import L from 'leaflet'
+import "@/assets/js/control.trackplayback.js" //轨迹回放
+import "@/assets/js/leaflet.trackplayback.js" //轨迹回放
+
 import '@/assets/js/Leaflet.PolylineMeasure.js'
 // 轨迹回放
 import '@/assets/js/LeafletPlayback.js'
 import demoTracks from '@/assets/js/demo-tracks.js' //数据，正常应该是从接口获取进行数据整理
-
+import playBackData from '../assets/playback1.json'
+import playBackData2 from '../assets/playback2.json'
 // 地图操作mapMixin
 export default {
   data() {
@@ -17,7 +22,8 @@ export default {
       polylineMeasure: null,
       layer: null,
       allLayers: [],
-      isPlayback: false
+      isPlayback: false,
+      isPlayback2: false
     }
   },
   methods: {
@@ -176,7 +182,61 @@ export default {
       } else {
         this.isPlayback = false
       }
+    },
+    _playBack2(map) { //回放轨迹
+      let res = playBackData
+      map.setView([34.36384353883067, 134.09362792968753], 8); //改变中心
+      const trackplayback = L.trackplayback(res, map, {
+        targetOptions: {
+          useImg: true,
+          imgUrl: require('@/assets/logo.png')
+        },
+         trackLineOptions: {
+            // whether draw track line
+            isDraw: false,
+            stroke: true,
+            color: "#00aa00",
+            weight: 2,
+            fill: false,
+            fillColor: '#000',
+            opacity: 0.3
+          },
+      })
+      const trackplaybackControl = L.trackplaybackcontrol(trackplayback);
+      trackplaybackControl.addTo(map);
+      trackplayback.on('tick', e => {
+        // console.log(e.time)
+      }, this)
+      //看待地图上的控件,隐藏它们写自己的样式，然后click就是相应的控件click
 
-    }
+      // 第二条轨迹  为了不同颜色
+      let res2 = playBackData2
+      const trackplayback2 = L.trackplayback(res2, map, {
+          clockOptions: {
+            // the default speed
+            // caculate method: fpstime * Math.pow(2, speed - 1)
+            // fpstime is the two frame time difference
+            speed: 13,
+            // the max speed
+            maxSpeed: 65
+          },
+        targetOptions: {
+          useImg: true,
+          imgUrl: require('@/assets/ship.png')
+        },
+         trackLineOptions: {
+            // whether draw track line
+            isDraw: false,
+            stroke: true,
+            color: "#ff0000",
+            weight: 2,
+            fill: false,
+            fillColor: '#000',
+            opacity: 0.3
+          },
+      })
+      const trackplaybackControl2 = L.trackplaybackcontrol(trackplayback2);
+      trackplaybackControl2.addTo(map)
+    },
   }
 }

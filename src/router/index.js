@@ -50,6 +50,12 @@ const routes = [{
     name: 'Map',
     component: () =>
       import('../components/Map.vue')
+  },
+  {
+    path: '/flex',
+    name: 'Flex',
+    component: () =>
+      import('../components/Flex.vue')
   }
 ]
 

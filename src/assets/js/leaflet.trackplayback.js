@@ -400,6 +400,7 @@
             let e = this._getLayerPoint(t[i]);
             this._ctx.lineTo(e.x, e.y)
           }
+          console.log(i.color,999)
             this._ctx.globalAlpha = i.opacity, i.stroke && (
             this._ctx.strokeStyle = i.color, this._ctx.lineWidth =
                 i.weight, this._ctx.stroke()), i.fill && (this._ctx.fillStyle = i.fillColor, this._ctx.fill()),

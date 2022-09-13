@@ -18,6 +18,8 @@ export default {
       lat: 0,
       lng: 0,
       isClick: false,
+      isPolyline: false,
+      isPolygon: false,
       isMeasure: false,
       polylineMeasure: null,
       layer: null,
@@ -64,10 +66,13 @@ export default {
       if (!this.isClick) {
         this.isClick = true
         map.addEventListener('click', (e) => { //点击事件
-          this.layer = L.marker([e.latlng.lat, e.latlng.lng], {
+          let layer = L.marker([e.latlng.lat, e.latlng.lng], {
             icon: myIcon
           }).addTo(map);
-          this.allLayers.push(this.layer) //存下所有layers
+          layer.on("click",function(){
+              layer.bindPopup(`<div class='leaflet-popup-free-info'>纬度：${e.latlng.lat} </div><div class='leaflet-popup-free-info'>经度：${e.latlng.lng}</div>`)
+          })
+          this.allLayers.push(layer) //存下所有layers
           map.setView([e.latlng.lat, e.latlng.lng]) // 移动到中心
         })
       } else {
@@ -77,6 +82,32 @@ export default {
         })
         this.isClick = false
       }
+    },
+    _drawPolyline(map,data){ //画线
+      if(!this.isPolyline){
+        var latlngs = [
+            [45.51, -122.68],
+            [37.77, -122.43],
+            [34.04, -118.2]
+        ];
+        this.polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);  //挂载线路路线
+        // zoom the map to the polyline
+        map.fitBounds(this.polyline.getBounds());
+      }else{ //取消画线
+        map.removeLayer(this.polyline) //清除画线
+      }
+      this.isPolyline =! this.isPolyline
+    },
+    _drawPolygon(map,data){ //画多边形
+      if(!this.isPolygon){
+        var latlngs = [[37, -109.05],[41, -109.03],[41, -102.05],[37, -102.04]];
+        this.isPolygon = L.polygon(latlngs, {color: 'red'}).addTo(map);  //挂载线路路线
+        // zoom the map to the isPolygon
+        map.fitBounds(this.isPolygon.getBounds());
+      }else{ //取消画线
+        map.removeLayer(this.isPolygon) //清除画线
+      }
+      this.isPolygon = !this.isPolygon
     },
     _measureDistance(map, id) { //测量距离
       if (!this.isMeasure) {
@@ -183,7 +214,24 @@ export default {
         this.isPlayback = false
       }
     },
+    _polyline(map) { //画线
+      let res = playBackData
+      let pData = []
+      res.forEach(item => {
+        pData.push([item.lat, item.lng])
+      })
+      console.log("数据")
+      console.log(pData)
+      var polyline = L.polyline(pData, {
+        color:'#ff00ff',
+        smoothFactor:1
+      }).addTo(map);
+
+      // zoom the map to the polyline
+      map.fitBounds(polyline.getBounds());
+    },
     _playBack2(map) { //回放轨迹
+      // this._polyline(map)  //画线
       let res = playBackData
       map.setView([34.36384353883067, 134.09362792968753], 8); //改变中心
       const trackplayback = L.trackplayback(res, map, {
@@ -191,49 +239,52 @@ export default {
           useImg: true,
           imgUrl: require('@/assets/logo.png')
         },
-         trackLineOptions: {
-            // whether draw track line
-            isDraw: false,
-            stroke: true,
-            color: "#00aa00",
-            weight: 2,
-            fill: false,
-            fillColor: '#000',
-            opacity: 0.3
-          },
+        trackLineOptions: {
+          // whether draw track line
+          isDraw: true,
+          stroke: true,
+          color:"#00aa00",
+          weight: 2,
+          fill: true,
+          fillColor: '#00ff00',
+          opacity: 0.3
+        },
+
       })
       const trackplaybackControl = L.trackplaybackcontrol(trackplayback);
       trackplaybackControl.addTo(map);
       trackplayback.on('tick', e => {
-        // console.log(e.time)
+        // console.log('移动中')
+        // console.log(e)
+        // console.log('-------')
       }, this)
       //看待地图上的控件,隐藏它们写自己的样式，然后click就是相应的控件click
 
       // 第二条轨迹  为了不同颜色
       let res2 = playBackData2
       const trackplayback2 = L.trackplayback(res2, map, {
-          clockOptions: {
-            // the default speed
-            // caculate method: fpstime * Math.pow(2, speed - 1)
-            // fpstime is the two frame time difference
-            speed: 13,
-            // the max speed
-            maxSpeed: 65
-          },
+        clockOptions: {
+          // the default speed
+          // caculate method: fpstime * Math.pow(2, speed - 1)
+          // fpstime is the two frame time difference
+          speed: 13,
+          // the max speed
+          maxSpeed: 65
+        },
         targetOptions: {
           useImg: true,
           imgUrl: require('@/assets/ship.png')
         },
-         trackLineOptions: {
-            // whether draw track line
-            isDraw: false,
-            stroke: true,
-            color: "#ff0000",
-            weight: 2,
-            fill: false,
-            fillColor: '#000',
-            opacity: 0.3
-          },
+        trackLineOptions: {
+          // whether draw track line
+          isDraw: true,
+          stroke: true,
+          color: "#ff0000",
+          weight: 2,
+          fill: true,
+          fillColor: '#ff0000',
+          opacity: 0.3
+        },
       })
       const trackplaybackControl2 = L.trackplaybackcontrol(trackplayback2);
       trackplaybackControl2.addTo(map)

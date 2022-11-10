@@ -10,10 +10,25 @@ import '@/assets/js/Leaflet.PolylineMeasure.js'
 import '@/assets/js/LeafletPlayback.js'
 import demoTracks from '@/assets/js/demo-tracks.js' //数据，正常应该是从接口获取进行数据整理
 import playBackData from '../assets/playback1.json'
-import playBackData2 from '../assets/playback2.json'
+import playBackData2 from '../assets/playback2.json';
+let randomLayer = Math.floor(Math.random() * 2) // 图层随机整数 0-2
+let tiandituV = L.layerGroup([ // 卫星
+      L.tileLayer(`http://t${randomLayer}.tianditu.gov.cn/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=5bb740ffd3a80fb3963e022454eca6e2`),
+      L.tileLayer(`http://t${randomLayer}.tianditu.gov.cn/DataServer?T=cia_w&x={x}&y={y}&l={z}&tk=5bb740ffd3a80fb3963e022454eca6e2`)
+    ])
+
+    let tiandituS = L.layerGroup([ // 地形
+      L.tileLayer(`http://t${randomLayer}.tianditu.gov.cn/DataServer?T=ter_w&x={x}&y={y}&l={z}&tk=5bb740ffd3a80fb3963e022454eca6e2`),
+      L.tileLayer(`http://t${randomLayer}.tianditu.gov.cn/DataServer?T=cta_w&x={x}&y={y}&l={z}&tk=5bb740ffd3a80fb3963e022454eca6e2`)
+    ])
+
+    let tiandituI = L.layerGroup([ // 街道
+      L.tileLayer(`http://t${randomLayer}.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=5bb740ffd3a80fb3963e022454eca6e2`),
+      L.tileLayer(`http://t${randomLayer}.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=5bb740ffd3a80fb3963e022454eca6e2`)
+    ])
 // 地图操作mapMixin
 export default {
-  data() {
+  data () {
     return {
       lat: 0,
       lng: 0,
@@ -29,36 +44,33 @@ export default {
     }
   },
   methods: {
-    _createMap(id, options) {
-      var tiandituI = L.layerGroup([ //天地图街道 变成t{s}不行??
-        L.tileLayer(
-          'http://t4.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=5bb740ffd3a80fb3963e022454eca6e2'),
-        L.tileLayer(
-          'http://t4.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=5bb740ffd3a80fb3963e022454eca6e2')
-      ])
+    _createMap (id, options) {
+    
+    
       // 初始化地图信息
       var map = L.map(id, {
-        layers: [tiandituI],
+        layers: [tiandituI,tiandituV,tiandituS],
         maxZoom: 18,
         zoom: 3,
         zoomControl: false
       }).setView([24, 110], 6)
+     
       return map
     },
-    _getLatLng(map) { //得到经纬度
+    _getLatLng (map) { //得到经纬度
       map.addEventListener("mousemove", (e) => {
         this.lat = e.latlng.lat.toFixed(5);
         this.lng = e.latlng.lng.toFixed(5);
       })
     },
-    _getZoom(map) { //得到层级
+    _getZoom (map) { //得到层级
       map.addEventListener("zoom", (e) => { //监听放大缩放事件
         console.log(e)
         console.log("当前缩放层级：")
         console.log(map.getZoom())
       })
     },
-    _drawPoint(map, iconUrl) { //画点 方式点击画标注点
+    _drawPoint (map, iconUrl) { //画点 方式点击画标注点
       var myIcon = L.icon({ //自定义图片
         iconUrl: iconUrl,
         iconSize: [20, 20]
@@ -69,8 +81,8 @@ export default {
           let layer = L.marker([e.latlng.lat, e.latlng.lng], {
             icon: myIcon
           }).addTo(map);
-          layer.on("click",function(){
-              layer.bindPopup(`<div class='leaflet-popup-free-info'>纬度：${e.latlng.lat} </div><div class='leaflet-popup-free-info'>经度：${e.latlng.lng}</div>`)
+          layer.on("click", function () {
+            layer.bindPopup(`<div class='leaflet-popup-free-info'>纬度：${e.latlng.lat} </div><div class='leaflet-popup-free-info'>经度：${e.latlng.lng}</div>`)
           })
           this.allLayers.push(layer) //存下所有layers
           map.setView([e.latlng.lat, e.latlng.lng]) // 移动到中心
@@ -83,33 +95,33 @@ export default {
         this.isClick = false
       }
     },
-    _drawPolyline(map,data){ //画线
-      if(!this.isPolyline){
+    _drawPolyline (map, data) { //画线
+      if (!this.isPolyline) {
         var latlngs = [
-            [45.51, -122.68],
-            [37.77, -122.43],
-            [34.04, -118.2]
+          [45.51, -122.68],
+          [37.77, -122.43],
+          [34.04, -118.2]
         ];
-        this.polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);  //挂载线路路线
+        this.polyline = L.polyline(latlngs, { color: 'red' }).addTo(map);  //挂载线路路线
         // zoom the map to the polyline
         map.fitBounds(this.polyline.getBounds());
-      }else{ //取消画线
+      } else { //取消画线
         map.removeLayer(this.polyline) //清除画线
       }
-      this.isPolyline =! this.isPolyline
+      this.isPolyline = !this.isPolyline
     },
-    _drawPolygon(map,data){ //画多边形
-      if(!this.isPolygon){
-        var latlngs = [[37, -109.05],[41, -109.03],[41, -102.05],[37, -102.04]];
-        this.isPolygon = L.polygon(latlngs, {color: 'red'}).addTo(map);  //挂载线路路线
+    _drawPolygon (map, data) { //画多边形
+      if (!this.isPolygon) {
+        var latlngs = [[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]];
+        this.isPolygon = L.polygon(latlngs, { color: 'red' }).addTo(map);  //挂载线路路线
         // zoom the map to the isPolygon
         map.fitBounds(this.isPolygon.getBounds());
-      }else{ //取消画线
+      } else { //取消画线
         map.removeLayer(this.isPolygon) //清除画线
       }
       this.isPolygon = !this.isPolygon
     },
-    _measureDistance(map, id) { //测量距离
+    _measureDistance (map, id) { //测量距离
       if (!this.isMeasure) {
         if (!this.polylineMeasure) {
           L.control.scale({
@@ -184,7 +196,7 @@ export default {
       // map.on('polylinemeasure:move', e => { /* e.latlng ; e.sourceTarget._latlng */ });
       // map.on('polylinemeasure:remove', e => { /* e.latlng ; e.sourceTarget._latlng */ });
     },
-    _playback(map) {
+    _playback (map) {
 
       var basemapLayer = new L.TileLayer('http://{s}.tiles.mapbox.com/v3/github.map-xgq2svrz/{z}/{x}/{y}.png');
 
@@ -214,7 +226,7 @@ export default {
         this.isPlayback = false
       }
     },
-    _polyline(map) { //画线
+    _polyline (map) { //画线
       let res = playBackData
       let pData = []
       res.forEach(item => {
@@ -223,14 +235,14 @@ export default {
       console.log("数据")
       console.log(pData)
       var polyline = L.polyline(pData, {
-        color:'#ff00ff',
-        smoothFactor:1
+        color: '#ff00ff',
+        smoothFactor: 1
       }).addTo(map);
 
       // zoom the map to the polyline
       map.fitBounds(polyline.getBounds());
     },
-    _playBack2(map) { //回放轨迹
+    _playBack2 (map) { //回放轨迹
       // this._polyline(map)  //画线
       let res = playBackData
       map.setView([34.36384353883067, 134.09362792968753], 8); //改变中心
@@ -243,7 +255,7 @@ export default {
           // whether draw track line
           isDraw: true,
           stroke: true,
-          color:"#00aa00",
+          color: "#00aa00",
           weight: 2,
           fill: true,
           fillColor: '#00ff00',
@@ -289,5 +301,22 @@ export default {
       const trackplaybackControl2 = L.trackplaybackcontrol(trackplayback2);
       trackplaybackControl2.addTo(map)
     },
+    _changeLayers (map) {
+      let baseLayers = {
+        '天地图街道':tiandituI,
+        '天地图卫星':tiandituV,
+        '天地图地形': tiandituS
+       }
+       L.control.layers(baseLayers).addTo(map);
+     
+      //声明地图并添加图层
+      // let map = L.map('normalMap', {
+      //   center: [36.09, 120.35],
+      //   zoom: 13,
+      //   layers: [tiandituI, tiandituV, tiandituS]
+      // });
+    
+    
+    }
   }
 }

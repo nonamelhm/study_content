@@ -7,7 +7,7 @@
       <li class="point measure" style="margin:0px 5px;" @click="_measureDistance(map,id)">{{isMeasure?'取消测量':'测量距离'}}</li>
       <li class="point" style="margin:0px 5px;" @click="_playback(map)">{{isPlayback?'停止回放':'回放轨迹'}}</li>
       <li class="point" style="margin:0px 5px;" @click="_playBack2(map)">{{isPlayback2?'停止回放2':'回放轨迹2'}}</li>
-      <li class="point" style="margin:0px 5px;">功能5敬请期待</li>
+      <li class="point" style="margin:0px 5px;" @click="_changeLayers(map)">切换图层</li>
     </ul>
   </div>
 </template>
